@@ -1,0 +1,29 @@
+@import "base";
+
+%section {
+  p {
+    margin: 0px;
+  }
+
+  header {
+    font-weight: bold;
+  }
+
+
+}
+
+section.education {
+  @extend %section;
+
+  .school {
+    font-style: italic;
+  }
+}
+
+section.work-experience {
+  @extend %section;
+
+  .employer {
+    font-style: italic;
+  }
+}

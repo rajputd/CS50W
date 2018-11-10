@@ -1,0 +1,52 @@
+@import "base";
+
+#portfolio {
+  display: grid;
+  grid-column-gap: 5%;
+  grid-row-gap: 2.5%;
+  padding: 10%;
+}
+
+@media only screen and (max-width: 600px) {
+  #portfolio {
+      grid-template-columns: 1fr;
+  }
+}
+
+@media only screen and (min-width: 600px) {
+
+  #portfolio {
+    grid-template-columns: 1fr 1fr;
+  }
+
+}
+
+.card {
+  width: 100%;
+  height: auto;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  transition: 0.3s;
+
+  a {
+    color: black;
+    text-decoration: none;
+  }
+
+  header {
+    font-weight: bold;
+  }
+
+  img {
+    width: 100%;
+    height: auto;
+    border-bottom: solid 1px gray;
+  }
+
+  .card-content {
+    padding: 10px;
+  }
+}
+
+.card:hover {
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
