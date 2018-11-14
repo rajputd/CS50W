@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask, session
+from flask import Flask, session, jsonify, abort
 from flask_session import Session
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
@@ -24,3 +24,30 @@ db = scoped_session(sessionmaker(bind=engine))
 @app.route("/")
 def index():
     return "Project 1: TODO"
+
+@app.route("/api/<isbn>", methods=["GET"])
+def api(isbn):
+    response = {}
+
+    #get book info
+    q = f"SELECT * FROM books WHERE isbn='{isbn}' LIMIT 1"
+    result = db.execute(q).fetchall()
+
+    #send not found if isbn isn't in db
+    if len(result) == 0:
+        abort(404)
+
+    #otherwise add book info to result
+    response['isbn'] = result[0][1]
+    response['title'] = result[0][2]
+    response['author'] = result[0][3]
+    response['year'] = result[0][4]
+
+    #get review info
+    q = f"SELECT AVG(rating), COUNT(reviewer_id) FROM books JOIN reviews ON books.book_id = reviews.book_id WHERE isbn='{isbn}'"
+    result = db.execute(q).fetchall()
+
+    response['average_score'] = float(result[0][0])
+    response['review_count'] = result[0][1]
+
+    return jsonify(response)
