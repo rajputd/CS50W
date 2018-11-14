@@ -47,7 +47,13 @@ def api(isbn):
     q = f"SELECT AVG(rating), COUNT(reviewer_id) FROM books JOIN reviews ON books.book_id = reviews.book_id WHERE isbn='{isbn}'"
     result = db.execute(q).fetchall()
 
-    response['average_score'] = float(result[0][0])
     response['review_count'] = result[0][1]
+
+    #set average_score to none if there are no reviews for the book
+    if response['review_count'] == 0:
+        response['average_score'] = None
+    else:
+        response['average_score'] = float(result[0][0])
+
 
     return jsonify(response)
