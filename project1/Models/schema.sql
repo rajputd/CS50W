@@ -1,7 +1,7 @@
 CREATE TABLE users (
   user_id serial primary key,
   username varchar(20),
-  password varchar(20)
+  password varchar(100)
 );
 
 CREATE TABLE books (
