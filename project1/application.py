@@ -25,7 +25,7 @@ db = scoped_session(sessionmaker(bind=engine))
 def index():
     return render_template("base.html")
 
-@app.route("/api/<isbn>", methods=["GET"])
+@app.route("/api/<string:isbn>", methods=["GET"])
 def api(isbn):
     response = {}
 
