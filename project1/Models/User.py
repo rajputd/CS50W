@@ -41,3 +41,24 @@ class User:
             self.conn.commit()
         except Exception as e:
             raise e
+
+    @staticmethod
+    def get_user_by_username(conn, username):
+        """Returns a User object if an account with the given username exists, returns None
+         otherwise."""
+
+        #see if password for given username exists
+        q = f"SELECT password FROM users WHERE username='{username}'"
+        result = conn.execute(q).fetchall()
+
+        #if password does not exist then return nothing
+        if len(result) == 0:
+            return None
+
+        #construct user object
+        user = User(conn, username)
+        user.pw_hash = result[0][0]
+
+        return user
+
+

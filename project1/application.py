@@ -29,9 +29,27 @@ def index():
     if not logged_in:
         return redirect("/login")
 
-@app.route("/login")
+@app.route("/login", methods=["GET", "POST"])
 def login():
-    return render_template("login.html")
+
+    #if it is not a form submission render the form
+    if request.method == "GET":
+        return render_template("login.html", message="")
+
+    #otherwise start authenticating user
+    username = request.form.get("username")
+    password = request.form.get("password")
+
+    user = User.get_user_by_username(db, username)
+
+    # show invalid password/username message if authentication fails
+    if not user.check_password(password):
+        return render_template("login.html", message="Invalid username/password")
+
+    # TODO set up session management
+    # TODO redirect to a better page
+    return render_template("login.html", message="Successfully logged in!")
+
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
