@@ -46,20 +46,20 @@ def register():
     password = request.form.get("password")
     password_conf = request.form.get("password-conf")
 
-    #if passwords match return an error
+    #if passwords don't match return an error
     if password != password_conf:
         return render_template("register.html", message="Passwords do not match")
 
     #set up model for user db queries
-    userModel = User(db)
+    userModel = User(db, username, password)
 
     #if user already exists then return an error
-    if userModel.exists(username):
+    if userModel.exists():
         return render_template("register.html", message="User already exists")
 
     #insert new user into DB
     try:
-        userModel.register(username, password)
+        userModel.register()
     #show an error message if something bad happens
     except:
         return render_template("register.html", message="We had an issue processing your registration, please try again at another time.")
