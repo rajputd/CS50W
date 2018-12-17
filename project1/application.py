@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask, session, jsonify, abort, render_template, redirect
+from flask import Flask, session, jsonify, abort, render_template, redirect, request
 from flask_session import Session
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
@@ -32,9 +32,42 @@ def index():
 def login():
     return render_template("login.html")
 
-@app.route("/register")
+@app.route("/register", methods=["GET", "POST"])
 def register():
-    return render_template("register.html")
+
+    #if it is not a form submission render the form
+    if request.method == "GET":
+        return render_template("register.html", message="")
+
+    #otherwise start processing form inputs
+    #get form parameters
+    username = request.form.get("username")
+    password = request.form.get("password")
+    password_conf = request.form.get("password-conf")
+
+    #if passwords match return an error
+    if password != password_conf:
+        return render_template("register.html", message="Passwords do not match")
+
+    #if user already exists then return an error
+    q = f"SELECT count(username) FROM users WHERE username='{username}'"
+    result = db.execute(q).fetchall()
+    if result[0][0] == 1:
+        return render_template("register.html", message="User already exists")
+
+    #insert new user into DB
+    try:
+        q = f"INSERT INTO users (username, password) VALUES ('{username}', '{password}')"
+        result = db.execute(q)
+        db.commit()
+
+    #show an error message if something bad happens
+    except:
+        return render_template("register.html", message="We had an issue processing your registration, please try again at another time.")
+
+    #display success
+    return render_template("register.html", message="Successfully added user!")
+
 
 @app.route("/api/<string:isbn>", methods=["GET"])
 def api(isbn):
