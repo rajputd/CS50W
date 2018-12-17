@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask, session, jsonify, abort
+from flask import Flask, session, jsonify, abort, render_template
 from flask_session import Session
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
@@ -23,7 +23,7 @@ db = scoped_session(sessionmaker(bind=engine))
 
 @app.route("/")
 def index():
-    return "Project 1: TODO"
+    return render_template("base.html")
 
 @app.route("/api/<isbn>", methods=["GET"])
 def api(isbn):
@@ -44,9 +44,15 @@ def api(isbn):
     response['year'] = result[0][4]
 
     #get review info
-    q = f"SELECT AVG(rating), COUNT(reviewer_id) FROM books JOIN reviews ON books.book_id = reviews.book_id WHERE isbn='{isbn}'"
+    q = f"""SELECT AVG(rating),
+                COUNT(reviewer_id)
+            FROM books
+            JOIN reviews
+                ON books.book_id = reviews.book_id
+            WHERE isbn='{isbn}'"""
     result = db.execute(q).fetchall()
 
+    #get review_count from query result
     response['review_count'] = result[0][1]
 
     #set average_score to none if there are no reviews for the book
@@ -54,6 +60,5 @@ def api(isbn):
         response['average_score'] = None
     else:
         response['average_score'] = float(result[0][0])
-
 
     return jsonify(response)
