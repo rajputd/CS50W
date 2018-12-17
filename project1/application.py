@@ -4,6 +4,7 @@ from flask import Flask, session, jsonify, abort, render_template, redirect, req
 from flask_session import Session
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
+from Models.User import User
 
 app = Flask(__name__)
 
@@ -49,18 +50,16 @@ def register():
     if password != password_conf:
         return render_template("register.html", message="Passwords do not match")
 
+    #set up model for user db queries
+    userModel = User(db)
+
     #if user already exists then return an error
-    q = f"SELECT count(username) FROM users WHERE username='{username}'"
-    result = db.execute(q).fetchall()
-    if result[0][0] == 1:
+    if userModel.exists(username):
         return render_template("register.html", message="User already exists")
 
     #insert new user into DB
     try:
-        q = f"INSERT INTO users (username, password) VALUES ('{username}', '{password}')"
-        result = db.execute(q)
-        db.commit()
-
+        userModel.register(username, password)
     #show an error message if something bad happens
     except:
         return render_template("register.html", message="We had an issue processing your registration, please try again at another time.")
