@@ -12,6 +12,12 @@ app = Flask(__name__)
 if not os.getenv("DATABASE_URL"):
     raise RuntimeError("DATABASE_URL is not set")
 
+if not os.getenv("SECRET_KEY"):
+    raise RuntimeError("SECRET_KEY is not set")
+
+#set SECRET_KEY
+app.secret_key = os.getenv("SECRET_KEY")
+
 # Configure session to use filesystem
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
@@ -24,10 +30,10 @@ db = scoped_session(sessionmaker(bind=engine))
 
 @app.route("/")
 def index():
-    logged_in = False #TODO
-
-    if not logged_in:
+    if not 'username' in session:
         return redirect("/login")
+
+    return redirect("/search")
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -46,9 +52,10 @@ def login():
     if not user.check_password(password):
         return render_template("login.html", message="Invalid username/password")
 
-    # TODO set up session management
-    # TODO redirect to a better page
-    return render_template("login.html", message="Successfully logged in!")
+    #set up user session
+    session['username'] = username
+
+    return redirect("/search")
 
 
 @app.route("/register", methods=["GET", "POST"])
@@ -84,6 +91,10 @@ def register():
 
     #display success
     return render_template("register.html", message="Successfully added user!")
+
+@app.route("/search", methods=["GET", "POST"])
+def search():
+    return render_template("search.html")
 
 
 @app.route("/api/<string:isbn>", methods=["GET"])
