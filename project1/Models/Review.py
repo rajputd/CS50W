@@ -2,11 +2,11 @@ class Review:
     """An object that provides an instance for interacting with records in the review table
     associated with this application."""
 
-    def __init__(self, rating, review_content, reviewer_id, book_id):
+    def __init__(self, rating, content, reviewer, book_title):
         self.rating = rating
-        self.review_content = review_content
-        self.reviewer_id = reviewer_id
-        self.book_id = book_id
+        self.content = content
+        self.reviewer = reviewer
+        self.book_title = book_title
 
     @staticmethod
     def create(conn, review):
@@ -16,7 +16,19 @@ class Review:
     @staticmethod
     def get_reviews_by_bookId(conn, bookId):
         """Returns a list of Book objects that have the given bookId."""
-        pass
+
+        q = f"""SELECT rating, review_content, username, title
+            FROM reviews
+            JOIN books ON reviews.book_id=books.book_id
+            JOIN users ON reviews.reviewer_id=users.user_id
+            WHERE reviews.book_id={bookId}"""
+        results = conn.execute(q).fetchall()
+
+        reviews = []
+        for result in results:
+            reviews.append(Review(result[0], result[1], result[2], result[3]))
+
+        return reviews
 
 
     @staticmethod

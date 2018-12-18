@@ -122,7 +122,9 @@ def book(bookId):
     if book == None:
         abort(404)
 
-    return render_template("book.html", book=book)
+    reviews = Review.get_reviews_by_bookId(db, book.bookId)
+
+    return render_template("book.html", book=book, reviews=reviews)
 
 
 @app.route("/api/<string:isbn>", methods=["GET"])
