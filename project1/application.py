@@ -123,19 +123,18 @@ def book(bookId):
 def api(isbn):
     response = {}
 
-    #get book info
-    q = f"SELECT * FROM books WHERE isbn='{isbn}' LIMIT 1"
-    result = db.execute(q).fetchall()
+    #get book data from db
+    book = Book.get_by_isbn(db, isbn)
 
-    #send not found if isbn isn't in db
-    if len(result) == 0:
+    #send 404 not found if isbn isn't in db
+    if book == None:
         abort(404)
 
     #otherwise add book info to result
-    response['isbn'] = result[0][1]
-    response['title'] = result[0][2]
-    response['author'] = result[0][3]
-    response['year'] = result[0][4]
+    response['isbn'] = book.isbn
+    response['title'] = book.title
+    response['author'] = book.author
+    response['year'] = book.year
 
     #get review info
     q = f"""SELECT AVG(rating),

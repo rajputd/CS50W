@@ -10,6 +10,26 @@ class Book:
         self.year = year
 
     @staticmethod
+    def get_by_isbn(conn, isbn):
+        """Returns a Book object whose isbn matchs the isbn string provided.
+        Returns None if no book has the associated isbn."""
+
+        #get book info
+        q = f"SELECT * FROM books WHERE isbn='{isbn}' LIMIT 1"
+        result = conn.execute(q).fetchall()
+
+        #return None if isbn isn't in db
+        if len(result) == 0:
+            return None
+
+        #set result array to its only entry
+        result = result[0]
+
+        return Book(result[0], result[1], result[2], result[3], result[4])
+
+
+
+    @staticmethod
     def find(conn, query):
         """Returns a list of Book objects whose isbn, title, or author match the query string
         provided."""
