@@ -38,4 +38,28 @@ class Review:
     @staticmethod
     def get_avg_rating(conn, bookId):
         """Returns the average rating for the given bookId. Returns None if book has no reviews."""
-        pass
+        # get review info
+        q = f"SELECT AVG(rating) FROM reviews WHERE book_id='{bookId}'"
+        result = conn.execute(q).fetchall()
+
+        #get review_count from query result
+        average_score = result[0][0]
+
+        #return None when there are no reviews
+        if average_score == None:
+            return None
+
+        #convert result into float for easier processing
+        return float(average_score)
+
+    @staticmethod
+    def get_review_count(conn, bookId):
+        """Returns the number of reviews for the given bookId."""
+        q = f"SELECT COUNT(rating) FROM reviews WHERE book_id='{bookId}'"
+        result = conn.execute(q).fetchall()
+
+        #get review_count from query result
+        count = result[0][0]
+
+        return count
+
