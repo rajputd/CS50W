@@ -9,9 +9,18 @@ class Review:
         self.book_title = book_title
 
     @staticmethod
-    def create(conn, review):
+    def create(conn, rating, content, reviewer_id, book_id):
         """Creates an entry in the reviews table with the provided review data."""
-        pass
+        q = f"""INSERT INTO reviews
+                (rating, review_content, reviewer_id, book_id)
+            VALUES
+                ('{rating}', '{content}', '{reviewer_id}', '{book_id}')"""
+        try:
+            conn.execute(q)
+            conn.commit()
+        except Exception as e:
+            raise e
+
 
     @staticmethod
     def get_reviews_by_bookId(conn, bookId):
@@ -21,7 +30,7 @@ class Review:
             FROM reviews
             JOIN books ON reviews.book_id=books.book_id
             JOIN users ON reviews.reviewer_id=users.user_id
-            WHERE reviews.book_id={bookId}"""
+            WHERE reviews.book_id='{bookId}'"""
         results = conn.execute(q).fetchall()
 
         reviews = []

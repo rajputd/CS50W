@@ -42,6 +42,16 @@ class User:
         except Exception as e:
             raise e
 
+    def get_user_id(self):
+        """Returns the user_id of the associated user. Returns None if there is no user_id"""
+        q = f"SELECT user_id FROM users WHERE username='{self.username}'"
+        result = self.conn.execute(q).fetchall()
+
+        if len(result) == 0:
+            return None
+
+        return result[0][0]
+
     @staticmethod
     def get_user_by_username(conn, username):
         """Returns a User object if an account with the given username exists, returns None

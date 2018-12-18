@@ -115,16 +115,34 @@ def search():
     return render_template("search.html", search_results=books)
 
 
-@app.route("/book/<string:bookId>", methods=["GET"])
+@app.route("/book/<string:bookId>", methods=["GET", "POST"])
 def book(bookId):
+    if not 'username' in session:
+        return redirect("/login")
+
+    #get book
     book = Book.get_by_id(db, bookId)
 
+    #abort if that book is never found
     if book == None:
         abort(404)
 
-    reviews = Review.get_reviews_by_bookId(db, book.bookId)
+    #process form submission
+    if request.method == "POST":
+        content = request.form.get("review_content")
+        rating = request.form.get("rating")
+        user = User.get_user_by_username(db, session['username'])
+        user_id = user.get_user_id()
 
-    return render_template("book.html", book=book, reviews=reviews)
+        #try to store review into DB
+        try:
+            Review.create(db, rating, content, user_id, book.bookId)
+        except:
+            reviews = Review.get_reviews_by_bookId(db, book.bookId)
+            render_template("book.html", book=book, reviews=reviews, message="Error: could not submit review. Please try again later")
+
+    reviews = Review.get_reviews_by_bookId(db, book.bookId)
+    return render_template("book.html", book=book, reviews=reviews, message="")
 
 
 @app.route("/api/<string:isbn>", methods=["GET"])
