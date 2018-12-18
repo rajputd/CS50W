@@ -18,8 +18,12 @@
     <![endif]-->
   </head>
   <body>
+    {% if 'username' in session: %}
+      <p>logged in</p>
+      <a href="{{ url_for('logout') }}"><button>logout</button></a>
+    {% endif %}
 
-    {%block content %}
+    {% block content %}
     {% endblock %}
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->

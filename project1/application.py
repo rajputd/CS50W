@@ -57,6 +57,11 @@ def login():
 
     return redirect("/search")
 
+@app.route("/logout", methods=["GET"])
+def logout():
+    session.pop('username', None)
+    return redirect("/login")
+
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
