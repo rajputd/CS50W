@@ -37,6 +37,8 @@ def index():
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
+    if 'username' in session:
+        return redirect("/search")
 
     #if it is not a form submission render the form
     if request.method == "GET":
@@ -99,7 +101,11 @@ def register():
 
 @app.route("/search", methods=["GET", "POST"])
 def search():
-    return render_template("search.html")
+    if not 'username' in session:
+        return redirect("/login")
+
+    if request.method == "GET":
+        return render_template("search.html")
 
 @app.route("/book/<string:isbn>", methods=["GET"])
 def book():
