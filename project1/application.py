@@ -101,6 +101,10 @@ def register():
 def search():
     return render_template("search.html")
 
+@app.route("/book/<string:isbn>", methods=["GET"])
+def book():
+    return render_template("book.html")
+
 
 @app.route("/api/<string:isbn>", methods=["GET"])
 def api(isbn):
