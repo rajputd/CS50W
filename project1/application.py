@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask, session, jsonify, abort, render_template, redirect, request
+from flask import Flask, session, jsonify, abort, render_template, redirect, request, url_for
 from flask_session import Session
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
@@ -33,14 +33,14 @@ db = scoped_session(sessionmaker(bind=engine))
 @app.route("/")
 def index():
     if not 'username' in session:
-        return redirect("/login")
+        return redirect(url_for("login"))
 
-    return redirect("/search")
+    return redirect(url_for("search"))
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if 'username' in session:
-        return redirect("/search")
+        return redirect(url_for("search"))
 
     #if it is not a form submission render the form
     if request.method == "GET":
@@ -59,12 +59,12 @@ def login():
     #set up user session
     session['username'] = username
 
-    return redirect("/search")
+    return redirect(url_for("search"))
 
 @app.route("/logout", methods=["GET"])
 def logout():
     session.pop('username', None)
-    return redirect("/login")
+    return redirect(url_for("login"))
 
 
 @app.route("/register", methods=["GET", "POST"])
@@ -104,7 +104,7 @@ def register():
 @app.route("/search", methods=["GET", "POST"])
 def search():
     if not 'username' in session:
-        return redirect("/login")
+        return redirect(url_for("login"))
 
     if request.method == "GET":
         return render_template("search.html")
@@ -118,7 +118,7 @@ def search():
 @app.route("/book/<string:bookId>", methods=["GET", "POST"])
 def book(bookId):
     if not 'username' in session:
-        return redirect("/login")
+        return redirect(url_for("login"))
 
     #get book
     book = Book.get_by_id(db, bookId)
