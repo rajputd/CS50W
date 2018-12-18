@@ -5,6 +5,7 @@ from flask_session import Session
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 from Models.User import User
+from Models.Book import Book
 
 app = Flask(__name__)
 
@@ -107,8 +108,14 @@ def search():
     if request.method == "GET":
         return render_template("search.html")
 
-@app.route("/book/<string:isbn>", methods=["GET"])
-def book():
+    query = request.form.get("search")
+    books = Book.find(db, query)
+
+    return render_template("search.html", search_results=books)
+
+
+@app.route("/book/<string:bookId>", methods=["GET"])
+def book(bookId):
     return render_template("book.html")
 
 
