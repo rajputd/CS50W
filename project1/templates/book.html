@@ -1,5 +1,8 @@
 {% extends "base.html" %}
 
 {% block content %}
-    book page
+    <h4>{{ book.title }}</h4>
+    <p>Author: {{ book.author }}</p>
+    <p>ISBN: {{ book.isbn }}</p>
+    <p>Year: {{ book.year }}</p>
 {% endblock %}

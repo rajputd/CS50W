@@ -116,7 +116,12 @@ def search():
 
 @app.route("/book/<string:bookId>", methods=["GET"])
 def book(bookId):
-    return render_template("book.html")
+    book = Book.get_by_id(db, bookId)
+
+    if book == None:
+        abort(404)
+
+    return render_template("book.html", book=book)
 
 
 @app.route("/api/<string:isbn>", methods=["GET"])

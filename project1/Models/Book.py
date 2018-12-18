@@ -27,6 +27,24 @@ class Book:
 
         return Book(result[0], result[1], result[2], result[3], result[4])
 
+    @staticmethod
+    def get_by_id(conn, id):
+        """Returns a Book object whose id matchs the id string provided.
+        Returns None if no book has the associated id."""
+
+        #get book info
+        q = f"SELECT * FROM books WHERE book_id='{id}' LIMIT 1"
+        result = conn.execute(q).fetchall()
+
+        #return None if id isn't in db
+        if len(result) == 0:
+            return None
+
+        #set result array to its only entry
+        result = result[0]
+
+        return Book(result[0], result[1], result[2], result[3], result[4])
+
 
 
     @staticmethod
