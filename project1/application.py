@@ -136,7 +136,13 @@ def book(bookId):
 
         #try to store review into DB
         try:
-            Review.create(db, rating, content, user_id, book.bookId)
+            # if review doesn't exist
+            if Review.get_unique_review(db, book.bookId, user_id) == None:
+                #create a new review
+                Review.create(db, rating, content, user_id, book.bookId)
+            else:
+                #update the existing review
+                Review.update(db, rating, content, user_id, book.bookId)
         except:
             reviews = Review.get_reviews_by_bookId(db, book.bookId)
             render_template("book.html", book=book, reviews=reviews, message="Error: could not submit review. Please try again later")

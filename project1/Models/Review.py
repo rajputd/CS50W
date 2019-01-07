@@ -21,6 +21,19 @@ class Review:
         except Exception as e:
             raise e
 
+    @staticmethod
+    def update(conn, rating, content, reviewer_id, book_id):
+        """Updates an entry in the reviews table with the provided data."""
+        q = f"""UPDATE reviews
+                SET rating = '{rating}',
+                review_content = '{content}'
+                WHERE reviewer_id='{reviewer_id}' AND book_id='{book_id}'"""
+        try:
+            conn.execute(q)
+            conn.commit()
+        except Exception as e:
+            raise e
+
 
     @staticmethod
     def get_reviews_by_bookId(conn, bookId):
@@ -43,7 +56,13 @@ class Review:
     @staticmethod
     def get_unique_review(conn, bookId, userId):
         """Returns the unique review associated with the given bookId, userId pair."""
-        pass
+        q = f"""SELECT * FROM reviews WHERE book_id='{bookId}' AND reviewer_id='{userId}'"""
+        results = conn.execute(q).fetchall()
+
+        if len(results) > 0:
+            return results[0]
+        else:
+            return None
 
     @staticmethod
     def update_review(conn, review):
