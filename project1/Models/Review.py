@@ -65,17 +65,6 @@ class Review:
             return None
 
     @staticmethod
-    def update_review(conn, review):
-        """Dpdates the review associated with the given review object with the contents of
-        the given review."""
-        pass
-
-    @staticmethod
-    def delete_review(conn, review):
-        """Removes the given review from the database"""
-        pass
-
-    @staticmethod
     def get_avg_rating(conn, bookId):
         """Returns the average rating for the given bookId. Returns None if book has no reviews."""
         # get review info
