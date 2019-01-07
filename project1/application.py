@@ -7,6 +7,7 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 from Models.User import User
 from Models.Book import Book
 from Models.Review import Review
+from API import get_average_gr_rating
 
 app = Flask(__name__)
 
@@ -147,8 +148,9 @@ def book(bookId):
             reviews = Review.get_reviews_by_bookId(db, book.bookId)
             render_template("book.html", book=book, reviews=reviews, message="Error: could not submit review. Please try again later")
 
+    gr_rating = get_average_gr_rating(book.isbn)
     reviews = Review.get_reviews_by_bookId(db, book.bookId)
-    return render_template("book.html", book=book, reviews=reviews, message="")
+    return render_template("book.html", book=book, reviews=reviews, message="", gr_rating=gr_rating)
 
 
 @app.route("/api/<string:isbn>", methods=["GET"])
