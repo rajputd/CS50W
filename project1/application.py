@@ -53,7 +53,7 @@ def login():
     user = User.get_user_by_username(db, username)
 
     # show invalid password/username message if authentication fails
-    if not user.check_password(password):
+    if user == None or not user.check_password(password):
         return render_template("login.html", message="Invalid username/password")
 
     #set up user session
