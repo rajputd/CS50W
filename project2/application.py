@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask
+from flask import Flask, render_template
 from flask_socketio import SocketIO, emit
 
 app = Flask(__name__)
@@ -11,4 +11,4 @@ print("Active on http://localhost:5000")
 
 @app.route("/")
 def index():
-    return "Project 2: TODO is working"
+    return render_template("login.html", error="")

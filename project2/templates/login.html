@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Welcome to Flack!</h1>
+    <p>Please provide a handle to use during your chats.</p>
+    {{error}}
+    <form action="" method="POST">
+        <input type="text" name="handle" placeholder="handle" required />
+        <button type="submit">submit</button>
+    </form>
+{% endblock %}
