@@ -28,6 +28,12 @@ def index():
             session['handle'] = handle
             return redirect(url_for('messages'))
 
+@app.route("/logout")
+def logout():
+    users.remove(session["handle"])
+    session.pop("handle", None)
+    return redirect(url_for("index"))
+
 @app.route("/messages")
 def messages():
     return render_template("messages.html")
