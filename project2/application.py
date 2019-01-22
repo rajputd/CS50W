@@ -20,11 +20,12 @@ def index():
     if request.method == "GET":
         return render_template("login.html", error="")
     else:
-        if request.form.get("handle") in users:
+        handle = request.form.get("handle")
+        if handle in users:
             return render_template("login.html", error="Sorry, that handle is currently taken")
         else:
-            users.append(request.form.get("handle"))
-            session['handle'] = request.form.get("handle")
+            users.append(handle)
+            session['handle'] = handle
             return redirect(url_for('messages'))
 
 @app.route("/messages")
