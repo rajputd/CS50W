@@ -7,6 +7,8 @@ app = Flask(__name__)
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 socketio = SocketIO(app)
 
+if __name__ == '__main__':
+    socketio.run(app)
 
 print("Active on http://localhost:5000")
 
@@ -50,3 +52,18 @@ def logout():
 @app.route("/messages")
 def messages():
     return render_template("messages.html")
+
+@socketio.on('connect')
+def handle_message():
+    print("client connected!")
+    return
+
+@socketio.on('message')
+def handle_my_event(data):
+    print(data)
+    data['sender'] = session['handle']
+    emit('broadcast_message', data, broadcast=True)
+    return
+
+if __name__ == '__main__':
+    socketio.run(app)

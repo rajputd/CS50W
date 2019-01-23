@@ -1,6 +1,50 @@
 {% extends "base.html" %}
 
+{% block header_content %}
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
+<script type="text/javascript" charset="utf-8">
+    var socket = io.connect('http://' + document.domain + ':' + location.port);
+
+    socket.on('broadcast_message', function(data) {
+        var chat_log = document.getElementById('chat-log');
+        var message = document.createElement('p');
+        message.textContent = data.sender + " says " + data.message;
+        chat_log.appendChild(message);
+    });
+
+    document.addEventListener("DOMContentLoaded", function() {
+        var form = document.getElementById('message-form');
+        if (form.attachEvent) {
+            form.attachEvent("submit", processForm);
+        } else {
+            form.addEventListener("submit", processForm);
+        }
+    });
+
+    function processForm(e) {
+        //stop page from refreshing
+        if (e.preventDefault) e.preventDefault();
+
+        //get message
+        var message = document.getElementById('message');
+
+        //send message to backend
+        socket.emit('message', {message : message.value})
+        return false;
+    }
+</script>
+{% endblock %}
+
 {% block content %}
     <p>You're logged in!</p>
     <a href="{{ url_for('logout') }}"><button>logout</button></a>
+
+    <div id="chat-log">
+
+    </div>
+
+    <form id="message-form">
+        <input id="message" type=text name="message" placeholder="message">
+        <button type=submit>Send</button>
+    </form>
 {% endblock %}
