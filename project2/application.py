@@ -47,6 +47,10 @@ def login():
 
 @app.route("/logout")
 def logout():
+
+    if session.get('handle') == None:
+        redirect(url_for("login"))
+
     #unregister user
     users.remove(session["handle"])
     session.pop("handle", None)
@@ -57,7 +61,7 @@ def logout():
 def messages():
 
     if session.get('handle') == None:
-        return redirect(url_for("index"))
+        return redirect(url_for("login"))
 
     cur_channel = session['current_channel']
     chatlog = channel_logs[cur_channel]
