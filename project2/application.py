@@ -13,6 +13,7 @@ if __name__ == '__main__':
 print("Active on http://localhost:5000")
 
 users = []
+channel_logs = { 'General' : [] }
 
 @app.route("/", methods=['GET', 'POST'])
 def index():
@@ -39,6 +40,9 @@ def login():
     users.append(handle)
     session['handle'] = handle
 
+    #add user to general channel
+    session['current_channel'] = 'General'
+
     return redirect(url_for('messages'))
 
 @app.route("/logout")
@@ -51,7 +55,13 @@ def logout():
 
 @app.route("/messages")
 def messages():
-    return render_template("messages.html")
+
+    if session.get('handle') == None:
+        return redirect(url_for("index"))
+
+    cur_channel = session['current_channel']
+    chatlog = channel_logs[cur_channel]
+    return render_template("messages.html", channel=cur_channel, chatlog=chatlog)
 
 @socketio.on('connect')
 def handle_message():
@@ -62,6 +72,9 @@ def handle_message():
 def handle_my_event(data):
     print(data)
     data['sender'] = session['handle']
+
+    #add to channel's chat log
+    channel_logs[session['current_channel']].append(data)
     emit('broadcast_message', data, broadcast=True)
     return
 
