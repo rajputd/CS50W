@@ -1,4 +1,5 @@
 import os
+import time, datetime
 
 from flask import Flask, render_template, request, redirect, url_for, session
 from flask_socketio import SocketIO, emit
@@ -7,15 +8,13 @@ app = Flask(__name__)
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 socketio = SocketIO(app)
 
-
-users = []
 channel_logs = { 'General' : [] }
 
 @app.route("/", methods=['GET', 'POST'])
 def index():
     #if user is logged in go to messages
     if 'handle' in session:
-        return redirect(url_for('messages'))
+        return redirect(url_for('messages', channel="General"))
 
     #otherwise go to login form
     return redirect(url_for('login'))
@@ -45,7 +44,7 @@ def logout():
 
     return redirect(url_for("index"))
 
-@app.route("/messages/<string:channel>")
+@app.route("/messages/<string:channel>", methods=["GET"])
 def messages(channel):
 
     if session.get('handle') == None:
@@ -61,6 +60,7 @@ def handle_message():
 @socketio.on('message')
 def handle_my_event(data):
     data['sender'] = session['handle']
+    data['timestamp'] = getCurrentTime()
     print(data)
 
     #add message to channel logs
@@ -70,6 +70,11 @@ def handle_my_event(data):
     #add to channel's chat log
     emit('broadcast_message', data, broadcast=True)
     return
+
+def getCurrentTime():
+    ts = time.time()
+    return datetime.datetime.fromtimestamp(ts).strftime('%H:%M %m-%d-%Y')
+
 
 if __name__ == '__main__':
     socketio.run(app)

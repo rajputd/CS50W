@@ -13,9 +13,12 @@
     height: 100%;
 }
 
+.message {
+    margin: 10px;
+}
+
 .message > .content {
     background-color: #f0f1f3;
-    margin: 10px;
     border-radius: 10px;
     padding: 10px;
 }
@@ -23,6 +26,8 @@
 .message > .sender {
     margin-right: 10px;
     font-size: .75em;
+    margin-bottom: 1px;
+    padding-left: 10px;
 }
 
 #chat-log {

@@ -8,7 +8,7 @@
 
     socket.on('broadcast_message', function(data) {
         let chat_log = document.getElementById('chat-log');
-        let message = getMessageElement(data.message, data.sender);
+        let message = getMessageElement(data.message, data.sender, data.timestamp);
         chat_log.appendChild(message);
     });
 
@@ -44,21 +44,31 @@
         return window.location.pathname.split("/").pop();
     }
 
-    function getMessageElement(content, sender) {
+    function getMessageElement(content, sender, date) {
         let message = document.createElement('div');
         let content_elm = document.createElement('div');
         let sender_elm = document.createElement('p');
+        let name_elm = document.createElement('strong');
 
         message.classList.add('message');
         content_elm.classList.add('content');
         sender_elm.classList.add('sender');
-        sender_elm.classList.add('text-right');
+        sender_elm.classList.add('text-left');
 
+        //append name to sender
+        name_elm.innerHTML = sender
+        sender_elm.appendChild(name_elm);
+
+        //add date to sender
+        sender_elm.innerHTML += ' ' + date;
+
+        //set message content
         content_elm.innerHTML = content;
-        sender_elm.innerHTML = sender;
 
-        message.appendChild(content_elm);
+        //attach message children to parent
         message.appendChild(sender_elm);
+        message.appendChild(content_elm);
+
 
         return message;
     }
@@ -86,10 +96,10 @@
     <div id="chat-log">
         {% for message in chatlog %}
         <div class="message">
+            <p class="text-left sender"><strong>{{ message.sender }}</strong> {{ message.timestamp }}</p>
             <div class="content">
                 {{ message.message }}
             </div>
-            <p class="text-right sender">{{ message.sender }}</p>
         </div>
         {% endfor %}
     </div>
