@@ -7,9 +7,8 @@
     let channel_name = getChannelName();
 
     socket.on('broadcast_message', function(data) {
-        var chat_log = document.getElementById('chat-log');
-        var message = document.createElement('p');
-        message.textContent = data.sender + " says " + data.message;
+        let chat_log = document.getElementById('chat-log');
+        let message = getMessageElement(data.message, data.sender);
         chat_log.appendChild(message);
     });
 
@@ -44,6 +43,24 @@
     function getChannelName() {
         return window.location.pathname.split("/").pop();
     }
+
+    function getMessageElement(content, sender) {
+        let message = document.createElement('div');
+        let content_elm = document.createElement('div');
+        let sender_elm = document.createElement('p');
+
+        message.classList.add('message');
+        content_elm.classList.add('content');
+        sender_elm.classList.add('sender');
+
+        content_elm.innerHTML = content;
+        sender_elm.innerHTML = sender;
+
+        message.appendChild(content_elm);
+        message.appendChild(sender_elm);
+
+        return message;
+    }
 </script>
 {% endblock %}
 
@@ -63,10 +80,13 @@
     </nav>
     <div id="chat-log">
         {% for message in chatlog %}
-            <div class="message">
+        <div class="message">
+            <div class="content">
                 {{ message.message }}
             </div>
             <p class="text-right sender">{{ message.sender }}</p>
+        </div>
+
 
         {% endfor %}
     </div>
