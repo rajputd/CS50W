@@ -1,0 +1,19 @@
+#message-form {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 5px;
+    margin: 0;
+}
+
+.message {
+    background-color: #f0f1f3;
+    margin: 10px;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.sender {
+    margin-right: 10px;
+    font-size: .75em;
+}
