@@ -62,6 +62,10 @@
 
         return message;
     }
+
+    function scrollToLatestMessage() {
+        window.scrollTo(0,document.querySelector("#chat-log").scrollHeight);
+    }
 </script>
 {% endblock %}
 
