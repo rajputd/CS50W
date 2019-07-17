@@ -50,6 +50,10 @@ def messages(channel):
     if session.get('handle') == None:
         return redirect(url_for("login"))
 
+    #should redirect to 404
+    if not channel in channel_logs.keys():
+        return render_template("messages.html", channel="General", chatlog=channel_logs["General"], channel_names=channel_logs.keys())
+
     return render_template("messages.html", channel=channel, chatlog=channel_logs[channel], channel_names=channel_logs.keys())
 
 
