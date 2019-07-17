@@ -117,6 +117,37 @@
                     <li><a href="/messages/{{ name }}"> {{ name }}</a></li>
                 {% endfor %}
             </ul>
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addChannelFormModal">
+                +
+            </button>
+
+            <div class="modal fade" id="addChannelFormModal" tabindex="-1" role="dialog" aria-labelledby="addChannelFormModal" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addChannelFormTitle">Add Channel</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form>
+                        <div class="modal-body">
+                            <div class="form-group row">
+                                <label for="channel_name" class="col-sm-4 col-form-label">channel name: </label>
+                                <div class="col-sm-8">
+                                    <input type="text" name="channel_name" class="form-control" id="channel_name">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Add channel</button>
+                        </div>
+                    </form>
+                    </div>
+                </div>
+            </div>
+
         </div>
         <div id="chat-log" class="col-10 content">
             {% for message in chatlog %}
