@@ -74,15 +74,7 @@ def handle_my_event(data):
 @socketio.on('add_channel')
 def handle_message(data):
     name = data['name']
-
-    if name in channel_logs.keys():
-        send({'error': 'A channel with that name already exists!'})
-        return
-
     channel_logs[name] = []
-
-    print(name)
-    print(channel_logs)
 
     emit('channel_added', name)
     return
