@@ -2,7 +2,7 @@ import os
 import time, datetime
 
 from flask import Flask, render_template, request, redirect, url_for, session
-from flask_socketio import SocketIO, emit
+from flask_socketio import SocketIO, emit, send
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
@@ -50,7 +50,8 @@ def messages(channel):
     if session.get('handle') == None:
         return redirect(url_for("login"))
 
-    return render_template("messages.html", channel=channel, chatlog=channel_logs[channel])
+    return render_template("messages.html", channel=channel, chatlog=channel_logs[channel], channel_names=channel_logs.keys())
+
 
 @socketio.on('connect')
 def handle_message():
@@ -61,7 +62,6 @@ def handle_message():
 def handle_my_event(data):
     data['sender'] = session['handle']
     data['timestamp'] = getCurrentTime()
-    print(data)
 
     #add message to channel logs
     channel_name = data['channel']
@@ -69,6 +69,22 @@ def handle_my_event(data):
 
     #add to channel's chat log
     emit('broadcast_message', data, broadcast=True)
+    return
+
+@socketio.on('add_channel')
+def handle_message(data):
+    name = data['name']
+
+    if name in channel_logs.keys():
+        send({'error': 'A channel with that name already exists!'})
+        return
+
+    channel_logs[name] = []
+
+    print(name)
+    print(channel_logs)
+
+    emit('channel_added', name)
     return
 
 def getCurrentTime():

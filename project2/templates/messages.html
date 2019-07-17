@@ -12,6 +12,23 @@
         chat_log.appendChild(message);
     });
 
+    socket.on('channel_added', function(channel_name) {
+        let list = document.getElementById('channels');
+        let new_channel = document.createElement('li');
+        let link = document.createElement('a');
+
+        link.innerHTML = channel_name;
+        link.href = '/messages/' + channel_name;
+        new_channel.appendChild(link);
+        list.appendChild(new_channel);
+    });
+
+    socket.on('message', function(data) {
+        if (data.error) {
+            alert('Channel with that name already exists!');
+        }
+    });
+
     document.addEventListener("DOMContentLoaded", function() {
         var form = document.getElementById('message-form');
         if (form.attachEvent) {
@@ -93,15 +110,24 @@
           </ul>
         </div>
     </nav>
-    <div id="chat-log">
-        {% for message in chatlog %}
-        <div class="message">
-            <p class="text-left sender"><strong>{{ message.sender }}</strong> {{ message.timestamp }}</p>
-            <div class="content">
-                {{ message.message }}
-            </div>
+    <div class="row">
+        <div id="sidebar" class="col-2 content">
+            <ul id="channels">
+                {% for name in channel_names %}
+                    <li><a href="/messages/{{ name }}"> {{ name }}</a></li>
+                {% endfor %}
+            </ul>
         </div>
-        {% endfor %}
+        <div id="chat-log" class="col-10 content">
+            {% for message in chatlog %}
+            <div class="message">
+                <p class="text-left sender"><strong>{{ message.sender }}</strong> {{ message.timestamp }}</p>
+                <div class="content">
+                    {{ message.message }}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
     </div>
 
     <form id="message-form" class="">
