@@ -53,7 +53,7 @@ def messages(channel):
 
     #should redirect to 404
     if not channel in channel_logs.keys():
-        return render_template("messages.html", channel="General", chatlog=channel_logs["General"], channel_names=channel_logs.keys())
+        return redirect(url_for("messages", channel="General"))
 
     session["last_channel"] = channel
 
