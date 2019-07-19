@@ -177,10 +177,9 @@
                     <li><a class="channel_link" href="/messages/{{ name }}">{{ name }}</a></li>
                 {% endfor %}
             </ul>
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addChannelFormModal">
-                +
+            <button id="add_channel_btn" type="button" class="btn btn-primary" data-toggle="modal" data-target="#addChannelFormModal">
+                    +
             </button>
-
             <div class="modal fade" id="addChannelFormModal" tabindex="-1" role="dialog" aria-labelledby="addChannelFormModal" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
