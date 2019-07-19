@@ -14,7 +14,7 @@ channel_logs = { 'General' : [] }
 def index():
     #if user is logged in go to messages
     if 'handle' in session:
-        return redirect(url_for('messages', channel="General"))
+        return redirect(url_for('messages', channel=session.get("last_channel")))
 
     #otherwise go to login form
     return redirect(url_for('login'))
@@ -41,6 +41,7 @@ def logout():
         redirect(url_for("login"))
 
     session.pop("handle", None)
+    session.pop("last_channel", None)
 
     return redirect(url_for("index"))
 
@@ -53,6 +54,8 @@ def messages(channel):
     #should redirect to 404
     if not channel in channel_logs.keys():
         return render_template("messages.html", channel="General", chatlog=channel_logs["General"], channel_names=channel_logs.keys())
+
+    session["last_channel"] = channel
 
     return render_template("messages.html", channel=channel, chatlog=channel_logs[channel], channel_names=channel_logs.keys())
 
