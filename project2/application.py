@@ -74,6 +74,10 @@ def handle_my_event(data):
     channel_name = data['channel']
     channel_logs[channel_name].append(data)
 
+    #limit storage of messages to last 100
+    if len(channel_logs[channel_name]) > 100:
+        channel_logs[channel_name].pop(0)
+
     #add to channel's chat log
     emit('broadcast_message', data, broadcast=True)
     return
