@@ -1,5 +1,6 @@
 import os
 import time, datetime
+import uuid
 
 from flask import Flask, render_template, request, redirect, url_for, session
 from flask_socketio import SocketIO, emit, send
@@ -69,9 +70,12 @@ def handle_message():
 def handle_my_event(data):
     data['sender'] = session['handle']
     data['timestamp'] = getCurrentTime()
+    data['id'] = uuid.uuid4().hex
 
     #add message to channel logs
     channel_name = data['channel']
+
+    #add message to channel logs
     channel_logs[channel_name].append(data)
 
     #limit storage of messages to last 100
@@ -81,6 +85,22 @@ def handle_my_event(data):
     #add to channel's chat log
     emit('broadcast_message', data, broadcast=True)
     return
+
+@socketio.on('delete_message')
+def delete_message(data):
+    channel_name = data['channel']
+    id = data['id']
+
+    for index in range(len(channel_logs[channel_name])):
+        message = channel_logs[channel_name][index]
+        if message['id'] == id:
+            channel_logs[channel_name].pop(index)
+            break
+
+    #add to channel's chat log
+    emit('delete_message', data, broadcast=True)
+    return
+
 
 @socketio.on('add_channel')
 def handle_message(data):

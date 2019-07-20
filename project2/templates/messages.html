@@ -8,8 +8,14 @@
 
     socket.on('broadcast_message', function(data) {
         let chat_log = document.getElementById('chat-log');
-        let message = getMessageElement(data.message, data.sender, data.timestamp);
+        let message = getMessageElement(data);
         chat_log.appendChild(message);
+    });
+
+    socket.on('delete_message', function(data) {
+        if (getChannelName() == data.channel) {
+            document.getElementById(data.id).remove();
+        }
     });
 
     socket.on('channel_added', function(channel_name) {
@@ -94,6 +100,10 @@
         redirectToChannel(new_channel_name);
     }
 
+    function handleDeleteButtonClick(id) {
+        socket.emit('delete_message', {id: id, channel: getChannelName()});
+    }
+
     function redirectToChannel(channel_name) {
         const protocol = window.location.protocol;
         const host = window.location.host;
@@ -121,33 +131,61 @@
         return window.location.pathname.split("/").pop();
     }
 
-    function getMessageElement(content, sender, date) {
-        let message = document.createElement('div');
-        let content_elm = document.createElement('div');
-        let sender_elm = document.createElement('p');
-        let name_elm = document.createElement('strong');
+    function getMessageElement(data) {
+        const sender = data.sender;
+        const content = data.message;
+        const date  = data.timestamp;
+        const id = data.id;
 
-        message.classList.add('message');
-        content_elm.classList.add('content');
-        sender_elm.classList.add('sender');
-        sender_elm.classList.add('text-left');
+        let parent = document.createElement('div');
+        parent.id = id;
+        parent.classList.add("message");
+        parent.append(createMessageHeader(sender, date));
+        parent.append(createMessageContent(content, id));
+
+        console.log(parent);
+        return parent;
+    }
+
+    function createMessageHeader(sender, date) {
+        let header = document.createElement('p');
+        let sender_elm = document.createElement('strong');
+
+        header.classList.add('sender');
+        header.classList.add('text-left');
 
         //append name to sender
-        name_elm.innerHTML = sender
-        sender_elm.appendChild(name_elm);
+        sender_elm.innerHTML = sender;
+        header.appendChild(sender_elm);
 
         //add date to sender
-        sender_elm.innerHTML += ' ' + date;
+        header.innerHTML += ' ' + date;
 
-        //set message content
-        content_elm.innerHTML = content;
+        return header;
+    }
 
-        //attach message children to parent
-        message.appendChild(sender_elm);
-        message.appendChild(content_elm);
+    function createMessageContent(content, id) {
+        let content_parent = document.createElement('div');
+        content_parent.classList.add("content", "row");
 
+        let content_holder = document.createElement('p');
+        content_holder.classList.add('col-11');
+        content_holder.innerHTML = content;
 
-        return message;
+        let btn = createDeleteButton(id);
+
+        content_parent.append(content_holder, btn);
+
+        return content_parent;
+    }
+
+    function createDeleteButton(id) {
+        let btn = document.createElement('button');
+        btn.classList.add("col-1", "btn", "btn-light", "delete_msg_btn");
+        btn.onclick = function() {handleDeleteButtonClick(id);};
+        btn.innerHTML = 'X';
+
+        return btn;
     }
 
     function scrollToLatestMessage() {
@@ -213,10 +251,11 @@
         </div>
         <div id="chat-log" class="col-10 content">
             {% for message in chatlog %}
-            <div class="message">
+            <div id='{{message.id}}'  class="message">
                 <p class="text-left sender"><strong>{{ message.sender }}</strong> {{ message.timestamp }}</p>
-                <div class="content">
-                    {{ message.message }}
+                <div class="content row">
+                    <p class="col-11">{{ message.message }}</p>
+                    <button class="col-1 btn btn-light delete_msg_btn" onClick="handleDeleteButtonClick('{{ message.id }}')">X</button>
                 </div>
             </div>
             {% endfor %}
