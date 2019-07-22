@@ -4,7 +4,8 @@
 <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
 <script type="text/javascript" charset="utf-8">
     let socket = io.connect('http://' + document.domain + ':' + location.port);
-    let channel_name = getChannelName();
+    const channel_name = '{{ channel }}';
+    const sender_name = '{{ sender }}'
 
     socket.on('broadcast_message', function(data) {
         let chat_log = document.getElementById('chat-log');
@@ -13,7 +14,7 @@
     });
 
     socket.on('delete_message', function(data) {
-        if (getChannelName() == data.channel) {
+        if (channel_name == data.channel) {
             document.getElementById(data.id).remove();
         }
     });
@@ -101,7 +102,7 @@
     }
 
     function handleDeleteButtonClick(id) {
-        socket.emit('delete_message', {id: id, channel: getChannelName()});
+        socket.emit('delete_message', {id: id, channel: channel_name});
     }
 
     function redirectToChannel(channel_name) {
@@ -127,10 +128,6 @@
         return names;
     }
 
-    function getChannelName() {
-        return window.location.pathname.split("/").pop();
-    }
-
     function getMessageElement(data) {
         const sender = data.sender;
         const content = data.message;
@@ -141,9 +138,8 @@
         parent.id = id;
         parent.classList.add("message");
         parent.append(createMessageHeader(sender, date));
-        parent.append(createMessageContent(content, id));
+        parent.append(createMessageContent(content, id, sender));
 
-        console.log(parent);
         return parent;
     }
 
@@ -164,7 +160,7 @@
         return header;
     }
 
-    function createMessageContent(content, id) {
+    function createMessageContent(content, id, sender) {
         let content_parent = document.createElement('div');
         content_parent.classList.add("content", "row");
 
@@ -172,9 +168,13 @@
         content_holder.classList.add('col-11');
         content_holder.innerHTML = content;
 
-        let btn = createDeleteButton(id);
+        content_parent.append(content_holder);
 
-        content_parent.append(content_holder, btn);
+        //attach delete button
+        if (sender == sender_name) {
+            let btn = createDeleteButton(id);
+            content_parent.append(btn);
+        }
 
         return content_parent;
     }
@@ -255,7 +255,9 @@
                 <p class="text-left sender"><strong>{{ message.sender }}</strong> {{ message.timestamp }}</p>
                 <div class="content row">
                     <p class="col-11">{{ message.message }}</p>
+                    {% if message.sender == sender %}
                     <button class="col-1 btn btn-light delete_msg_btn" onClick="handleDeleteButtonClick('{{ message.id }}')">X</button>
+                    {% endif %}
                 </div>
             </div>
             {% endfor %}

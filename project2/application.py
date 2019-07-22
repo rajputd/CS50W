@@ -58,7 +58,9 @@ def messages(channel):
 
     session["last_channel"] = channel
 
-    return render_template("messages.html", channel=channel, chatlog=channel_logs[channel], channel_names=channel_logs.keys())
+    return render_template("messages.html", channel=channel, \
+        chatlog=channel_logs[channel], channel_names=channel_logs.keys(), \
+        sender=session.get('handle'))
 
 
 @socketio.on('connect')
@@ -107,7 +109,7 @@ def handle_message(data):
     name = data['name']
     channel_logs[name] = []
 
-    emit('channel_added', name)
+    emit('channel_added', name, broadcast=True)
     return
 
 def getCurrentTime():
