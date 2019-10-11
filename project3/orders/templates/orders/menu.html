@@ -1,0 +1,125 @@
+{% extends "orders/base.html" %}
+{% load orders_extras %}
+{% block title %} Pinocchio's Menu {% endblock %}
+
+{% block head %}
+<script>
+    function itemAdded(type, productID) {
+        //build appropriate type of form
+        //bind input fields to appropriate values
+    }
+
+    function buildForm(type) {
+
+    }
+
+    function buildPizzaForm() {
+
+    }
+</script>
+{% endblock %}
+
+{% block content %}
+    <h2>Pizzas</h2>
+    {% for pizza_type, pizzas_for_type in pizzas.items %}
+        <h3>{{pizza_type}}</h3>
+        <table class="table">
+            <tr>
+                <th role="col"></th>
+                {% for size in sizes %}
+                    <th role="col">{{size.size}}</th>
+                {% endfor %}
+            </tr>
+            {% for name, items in pizzas_for_type.items %}
+                <tr>
+                    <td>{{name}}</td>
+                    {% for size in sizes %}
+                        <td>
+                            {{items|get_item:size.size}}
+                        </td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </table>
+    {% endfor %}
+
+    <h2>Toppings</h2>
+    <table class="table">
+        {% for topping in toppings %}
+            <tr>
+                <td>{{topping.name}}</td>
+            </tr>
+        {% endfor %}
+    </table>
+
+    <h2>Subs</h2>
+    <table class="table">
+        <tr>
+            <th role="col"></th>
+            {% for size in sizes %}
+                <th role="col">{{size.size}}</th>
+            {% endfor %}
+        </tr>
+        {% for name, items in subs.items %}
+        <tr>
+            <td>{{name}}</td>
+            {% for size in sizes %}
+                <td>{{items|get_item:size.size}}</td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </table>
+
+    <h2>Sub Addons</h2>
+    <table class="table">
+        <tr>
+            <th role="col"></th>
+            {% for size in sizes %}
+                <th role="col">{{size.size}}</th>
+            {% endfor %}
+        </tr>
+        {% for sub_name, addon_info in addons.items %}
+        <tr>
+            <td>{{sub_name}}</td>
+        </tr>
+        {% for addon_name, pricing in addon_info.items %}
+        <tr>
+            <td>+ {{addon_name}}</td>
+
+            {% if '' in pricing.keys %}
+                <td>+{{pricing|get_item:''}}</td>
+                <td>+{{pricing|get_item:''}}</td>
+            {% else %}
+                {% for size in sizes %}
+                    <td>+{{pricing|get_item:size}}</td>
+                {% endfor %}
+            {% endif %}
+
+
+        </tr>
+        {% endfor %}
+        {% endfor %}
+    </table>
+
+
+    {% for entree_type, entree_items in entrees.items %}
+        <h2>{{ entree_type }}</h2>
+        <table class="table">
+            <tr>
+                <th role="col"></th>
+                {% for size in sizes %}
+                    <th role="col">{{size.size}}</th>
+                {% endfor %}
+            </tr>
+            {% for name, info in entree_items.items %}
+                <tr>
+                    <td>{{ name }}</td>
+                    {% for size in sizes %}
+                        <td>{{info|get_item:size}}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </table>
+    {% endfor %}
+
+{% endblock %}

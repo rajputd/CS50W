@@ -1,0 +1,15 @@
+.bg-red {
+    background-color: red;
+}
+
+.bg-green {
+    background-color: green;
+}
+
+#content {
+    min-height: 100vh;
+}
+
+.logo_img {
+    height: 2em;
+}

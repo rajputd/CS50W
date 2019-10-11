@@ -1,0 +1,187 @@
+{% extends "orders/base.html" %}
+{% block title %} Pinocchio's Pizza and Subs {% endblock %}
+
+{% block head %}
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            function setup() {
+                //add event listener to each radio btn
+                let btns = document.getElementsByName("orderItemType");
+                for (let i = 0; i < btns.length; i++) {
+                    btns[i].addEventListener('click', handleRadioPress, false);
+                }
+
+                //set default state of forms
+                handleRadioPress();
+            }
+
+            function handleRadioPress() {
+                let id = getSelectedForm();
+                displayForm(id);
+            }
+
+            function displayForm(id) {
+                let forms = document.querySelectorAll("form");
+                for (let i = 0; i < forms.length; i++) {
+                    if (forms[i].id == id) {
+                        forms[i].hidden = false;
+                    } else {
+                        forms[i].hidden = true;
+                    }
+                }
+            }
+
+            function getSelectedForm() {
+                let btns = document.getElementsByName("orderItemType");
+
+                for (let i = 0; i < btns.length; i++) {
+                    if (btns[i].checked) {
+                        return btns[i].value;
+                    }
+                }
+            }
+
+            setup();
+        });
+    </script>
+{% endblock %}
+
+{% block content %}
+    <h1 class="text-center">Shopping Cart</h1>
+    <h2>Current Order</h2>
+    <table class="table">
+        {% if order == None %}
+            <tr><td>Nothing ordered yet!</td></tr>
+        {% else %}
+            <thead>
+                <th scope="col">Item</th>
+                <th scope="col">Quantity</th>
+                <th scope="col">Price</th>
+            </thead>
+
+            <tbody>
+            {% if order.pizzas.all %}
+                {% for pizza_order in order.pizzas.all %}
+                    <tr>
+                        <td>{{pizza_order.pizza.pizza_type.name}} {{pizza_order.pizza.name}} pizza </td>
+                        <td>{{pizza_order.quantity}}</td>
+                        <td>${{pizza_order.price}}</td>
+                        <td><a href="{% url 'remove_order_item' order_type='pizza' id=pizza_order.id %}"><button class="btn btn-danger text-white">X</button></a></td>
+                    </tr>
+
+                    {% for topping_order in pizza_order.toppings.all %}
+                    <tr>
+                        <td>+ {{topping_order.topping}}</td>
+                        <td></td>
+                        <td></td>
+                        <td><a href="{% url 'remove_order_item' order_type='topping' id=topping_order.id %}"><button class="btn btn-danger text-white">X</button></a></td>
+                    </tr>
+                    {% endfor %}
+
+                {% endfor %}
+            {% endif %}
+
+            {% if order.subs.all %}
+                {% for sub_order in order.subs.all %}
+                    <tr>
+                        <td>{{sub_order.sub.name}} sub</td>
+                        <td>{{sub_order.quantity}}</td>
+                        <td>${{sub_order.price}}</td>
+                        <td><a href="{% url 'remove_order_item' order_type='sub' id=sub_order.id %}"><button class="btn btn-danger text-white">X</button></a></td>
+                    </tr>
+
+                    {% for addon_order in sub_order.addons.all %}
+                    <tr>
+                        <td>+ {{addon_order.addon.name}} (+${{addon_order.addon.price}})</td>
+                        <td></td>
+                        <td></td>
+                        <td><a href="{% url 'remove_order_item' order_type='addon' id=addon_order.id %}"><button class="btn btn-danger text-white">X</button></a></td>
+                    </tr>
+                    {% endfor %}
+
+                {% endfor %}
+            {% endif %}
+
+            {% if order.entrees.all %}
+                {% for entree_order in order.entrees.all %}
+                    <tr>
+                        <td>{{entree_order.entree.name}}</td>
+                        <td>{{entree_order.quantity}}</td>
+                        <td>${{entree_order.price}}</td>
+                        <td><a href="{% url 'remove_order_item' order_type='entree' id=entree_order.id %}"><button class="btn btn-danger text-white">X</button></a></td>
+                    </tr>
+                {% endfor %}
+            {% endif %}
+
+        {% endif %}
+
+        <tr>
+            <th scope="row">Total Price: </th>
+            <td>${{order.price}}</td>
+            <td></td>
+        </tr>
+
+        </tbody>
+    </table>
+
+
+    <a data-toggle="modal" data-target="#modalOrderForm">
+        <button class="btn btn-success">Add Item</button>
+    </a>
+    <a href="{% url 'submit_order' %}">
+        <button class="btn btn-success">Check Out</button>
+    </a>
+
+<div class="modal fade" id="modalOrderForm" tabindex="-1" role="dialog"
+aria-labelledby="Order form" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Order Item</h4>
+        <!-- close modal button -->
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body mx-3">
+          <div class="md-form mb-5">
+                <fieldset class="form-group">
+                    <div class="row">
+                        <legend class="col-form-label col-sm-2 pt-0"><Strong>Item Type:</Strong></legend>
+                        <div class="col-sm-10">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="orderItemType" id="pizza" value="pizzaOrderForm" checked>
+                                <label class="form-check-label" for="pizza">
+                                Pizza
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="orderItemType" id="sub" value="subOrderForm">
+                                <label class="form-check-label" for="sub">
+                                Sub
+                                </label>
+                            </div>
+                            <div class="form-check disabled">
+                                <input class="form-check-input" type="radio" name="orderItemType" id="entree" value="entreeOrderForm">
+                                <label class="form-check-label" for="entree">
+                                Entree
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+
+                {% include "orders/includes/pizzaOrderForm.html" %}
+
+                {% include "orders/includes/subOrderForm.html" %}
+
+                {% include "orders/includes/entreeOrderForm.html" %}
+          </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+{% endblock %}

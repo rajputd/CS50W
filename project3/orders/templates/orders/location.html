@@ -1,0 +1,39 @@
+{% extends "orders/base.html" %}
+{% block title %} Pinocchio's Location {% endblock %}
+
+{% block head %}
+<script>
+    function initMap() {
+        var position = {lat: 42.372128, lng: -71.120368};
+        var map = new google.maps.Map(
+        document.getElementById('map'), {zoom: 17, center: position});
+        var marker = new google.maps.Marker({position: position, map: map});
+}
+</script>
+
+<style>
+    #location_content {
+        min-height: 50%;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+    <h1 class="text-center">Location and Directions</h1>
+    <div class="container-fluid" id="location_content">
+        <div class="row">
+            <div class="col-6" id="map">
+            </div>
+            <div class="col-1"></div>
+            <ul class="col-5">
+                <li>Pinocchio's is located on Winthrop street right near the corner of JFK Street next to Berk's shoes.</li>
+                <li>We are 2 blocks from the Harvard Square T stop.</li>
+                <li>Do not park across the street from us! It is a tow zone!</li>
+            </ul>
+        </div>
+    </div>
+
+<script async defer
+    src="{% url 'google_maps_dependency' %}">
+</script>
+{% endblock %}

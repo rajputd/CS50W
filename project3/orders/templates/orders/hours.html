@@ -1,0 +1,29 @@
+{% extends "orders/base.html" %}
+{% block title %} Pinocchio's hours {% endblock %}
+
+{% block content %}
+    <h1 class="center-text">Hours</h1>
+
+    <table>
+        <tr>
+            <td>Sunday</td>
+            <td>1 pm - 12 am</td>
+        </tr>
+        <tr>
+            <td>Monday - Thursday</td>
+            <td>11 am - 1 am</td>
+        </tr>
+        <tr>
+            <td>Friday - Saturday</td>
+            <td>11 am - 2:30 am*</td>
+        </tr>
+    </table>
+
+    <p class="center-text"></p>
+        <i>
+            Please note that when the undergraduate students are
+            not in session we close on Friday and Saturday night at
+            1:00 am instead of 2:30 am.
+        </i>
+    </p>
+{% endblock %}
