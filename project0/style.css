@@ -13,5 +13,10 @@ body {
 }
 
 .text-field {
-    border-radius: 1px;
+    width: 125ch;
+}
+
+.center {
+    margin: auto;
+    text-align: center;
 }

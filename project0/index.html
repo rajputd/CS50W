@@ -4,10 +4,10 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Google</title>
-        <link rel="stylesheet" href="style.css">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+        <link rel="stylesheet" href="style.css">
     </head>
-    <body>
+    <body class="container-fluid">
         <div>
             <a href="advanced_search.html">advanced search</a>
             <a href="image_search.html">image searach</a>
@@ -16,10 +16,12 @@
         <h1>Google</h1>
         <div id="standard-search-form">
             <form action="https://google.com/search">
-                <input class="padding-top text-field" type="text" name="q">
+                <div class="input-group text-field center">
+                    <input class="form-control" type="text" name="q">
+                </div>
                 <div id="search-buttons" class="padding-top">
-                    <input type="submit" value="Google Search">
-                    <input type="submit" name="btnI" value="I'm Feeling Lucky">
+                    <input type="submit" value="Google Search" class="btn btn-light">
+                    <input type="submit" name="btnI" value="I'm Feeling Lucky" class="btn btn-light">
                 </div>
             </form>
         </div>
