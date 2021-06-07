@@ -1,0 +1,17 @@
+body {
+    font-family: Roboto, arial;
+    font-size: 14px;
+    text-align: center;
+}
+
+#standard-search-form {
+    margin: auto;
+}
+
+.padding-top {
+    margin-top: 10px;
+}
+
+.text-field {
+    border-radius: 1px;
+}
