@@ -7,31 +7,38 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
         <link rel="stylesheet" href="style.css">
     </head>
-    <body>
+    <body class="container-fluid">
         <div>
             <a href="index.html">normal search</a>
             <a href="image_search.html">image searach</a>
         </div>
-        <!--TODO search options should be stacked vertically and left aligned -->
-        <!--TODO search button should be blue with white text -->
         <form action="https://google.com/search">
-            <div>
-                <label>all these words:</label>
-                <input type="text" name="as_q">
+
+            <div class="form-group row">
+                <label for="as_q" class="text-start col-sm-2 col-form-label">all these words:</label>
+                <div class="col-sm-10">
+                    <input class="form-control" type="text" name="as_q">
+                </div>
             </div>
-            <div>
-                <label>this exact word or phrase:</label>
-                <input type="text" name="as_epq">
+            <div class="form-group row">
+                <label for="as_epq" class="text-start col-sm-2 col-form-label">this exact word or phrase:</label>
+                <div class="col-sm-10">
+                    <input class="form-control" type="text" name="as_epq">
+                </div>
             </div>
-            <div>
-                <label>any of these words:</label>
-                <input type="text" name="as_oq">
+            <div class="form-group row">
+                <label for="as_oq" class="text-start col-sm-2 col-form-label">any of these words:</label>
+                <div class="col-sm-10">
+                    <input class="form-control" type="text" name="as_oq">
+                </div>
             </div>
-            <div>
-                <label>none of these words:</label>
-                <input type="text" name="as_eq">
+            <div class="form-group row">
+                <label for="as_eq" class="text-start col-sm-2 col-form-label">none of these words:</label>
+                <div class="col-sm-10">
+                    <input class="form-control" type="text" name="as_eq">
+                </div>
             </div>
-            <input type="submit" value="Google Search">
+            <input class="btn btn-primary padding-top" type="submit" value="Google Search">
         </form>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
     </body>
