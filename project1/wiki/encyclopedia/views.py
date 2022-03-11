@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponseNotFound
 import markdown2
 
@@ -6,9 +6,32 @@ from . import util
 
 
 def index(request):
+    query = request.GET.get('q')
+    entries = util.list_entries()
+
+    # if no q then show all
+    if query == None:
+        return render(request, "encyclopedia/index.html", {
+            "title": "All Pages",
+            "entries": entries
+        })
+
+    # if q matches one entry exactly then redirect to that entry
+    match = util.get_entry(query)
+    if match != None:
+        return redirect('entry', title=query)
+
+    # show all entries that match on substr
+    filtered_entries = []
+    for entry in entries:
+        if query in entry:
+            filtered_entries.append(entry)
+
     return render(request, "encyclopedia/index.html", {
-        "entries": util.list_entries()
-    })
+                "title": 'Search results for "' + query + '"',
+                "entries": filtered_entries
+            })
+
 
 def entry(request, title):
     raw_content = util.get_entry(title=title)
