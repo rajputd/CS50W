@@ -52,6 +52,10 @@ def create(request):
 
         if form.is_valid():
             print("form is valid")
+        else:
+            print(form.errors)
+            return render(request, "encyclopedia/create.html", {'form': form})
+
     
 
     form = NewEntryForm()
