@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponseNotFound
+import markdown2
 
 from . import util
 
@@ -10,10 +11,13 @@ def index(request):
     })
 
 def entry(request, title):
-    if util.get_entry(title=title) == None:
+    raw_content = util.get_entry(title=title)
+    if raw_content == None:
         return HttpResponseNotFound('<h1> 404 Error: page "' + title + '" not found')
 
+    content = markdown2.markdown(raw_content)
     return render(request, "encyclopedia/entry.html", {
-        "title": title
+        "title": title,
+        "content": content
     })
 
