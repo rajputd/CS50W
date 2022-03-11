@@ -3,6 +3,7 @@ from django.http import HttpResponseNotFound
 import markdown2
 
 from . import util
+from .forms import NewEntryForm
 
 
 def index(request):
@@ -43,4 +44,16 @@ def entry(request, title):
         "title": title,
         "content": content
     })
+
+def create(request):
+    if request.method == 'POST':
+        print("form submitted")
+        form = NewEntryForm(request.POST)
+
+        if form.is_valid():
+            print("form is valid")
+    
+
+    form = NewEntryForm()
+    return render(request, "encyclopedia/create.html", {'form': form})
 
