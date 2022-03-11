@@ -10,9 +10,11 @@
 
 
     <form method="POST">
-        {% csrf_token %}
-        {{ form |crispy }}
+        <div class="w-75">
+            {% csrf_token %}
+            {{ form |crispy }}
         <input type="submit" value="Submit">
+        </div>
     </form>
 
 {% endblock %}
