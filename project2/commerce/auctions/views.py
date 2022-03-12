@@ -1,4 +1,6 @@
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
@@ -13,6 +15,8 @@ def index(request):
     print(listings)
     return render(request, "auctions/index.html", { 'listings': listings })
 
+
+@login_required
 def create_listing(request):
     if request.method == "POST":
         submitted_form = NewAuctionListingForm(request.POST)
