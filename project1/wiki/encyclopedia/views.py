@@ -51,9 +51,11 @@ def create(request):
         form = NewEntryForm(request.POST)
 
         if form.is_valid():
-            print("form is valid")
+            print("saving new entry...")
+            cleaned_data = form.cleaned_data
+            util.save_entry(cleaned_data['title'], cleaned_data['content'])
         else:
-            print(form.errors)
+            print("Rejected entry submission")
             return render(request, "encyclopedia/create.html", {'form': form})
 
     
