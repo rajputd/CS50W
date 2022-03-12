@@ -51,15 +51,23 @@ def create(request):
         form = NewEntryForm(request.POST)
 
         if form.is_valid():
-            print("saving new entry...")
             cleaned_data = form.cleaned_data
+
+            #check if already exists
+            exists = util.get_entry(cleaned_data["title"])
+            if exists != None:
+                print("Rejected entry submission: Entry with title '" + cleaned_data["title"] + '" already exists!')
+                form.add_error("title", "Entry with title '" + cleaned_data["title"] + '" already exists!')
+                return render(request, "encyclopedia/create.html", {'form': form})
+
+            print("saving new entry...")
             util.save_entry(cleaned_data['title'], cleaned_data['content'])
+            return redirect('entry', title=cleaned_data['title'])
         else:
-            print("Rejected entry submission")
+            print("Rejected entry submission for some generic reason")
             return render(request, "encyclopedia/create.html", {'form': form})
 
-    
-
+    # render a empty form
     form = NewEntryForm()
     return render(request, "encyclopedia/create.html", {'form': form})
 
