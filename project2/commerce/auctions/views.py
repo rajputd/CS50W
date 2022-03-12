@@ -9,7 +9,9 @@ from .forms import NewAuctionListingForm
 
 
 def index(request):
-    return render(request, "auctions/index.html")
+    listings = AuctionListing.objects.all()
+    print(listings)
+    return render(request, "auctions/index.html", { 'listings': listings })
 
 def create_listing(request):
     if request.method == "POST":

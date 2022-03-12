@@ -1,7 +1,26 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    <h2>Active Listings</h2>
+    <div class="container">
+        <h2>Active Listings</h2>
 
-    TODO
+        <ul class="list-group">
+            {% for listing in listings %}
+                <li class="list-group-item">
+                    <div class="row">
+                        <div class="col-3 border">
+                            <img src="{{ listing.image_url }}" class="img-fluid" alt="image for '{{ listing.title }}' auction listing">
+                        </div>
+                        <div class="col-9">
+                            <h3>{{ listing.title }}</h3>
+                            <p><strong>Price: $</strong>{{ listing.starting_bid }}</p>
+                            <p>{{ listing.description }}</p>
+                            <p>Created: {{ listing.create_time }}</p>
+                        </div>
+                    </div>
+                </li>
+            {% endfor %}
+            </ul>
+    </div>
+    
 {% endblock %}
