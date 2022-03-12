@@ -1,0 +1,19 @@
+{% extends "encyclopedia/layout.html" %}
+
+{% block title %}
+    Encyclopedia | Edit
+{% endblock %}
+
+{% block body %}
+    <h1>Edit '{{ title }}' Page</h1>
+    {% load crispy_forms_tags %}  
+
+    <form method="POST">
+        <div class="w-75">
+            {% csrf_token %}
+            {{ form |crispy }}
+        <input type="submit" value="Submit">
+        </div>
+    </form>
+
+{% endblock %}

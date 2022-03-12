@@ -71,3 +71,15 @@ def create(request):
     form = NewEntryForm()
     return render(request, "encyclopedia/create.html", {'form': form})
 
+def edit(request, title):
+    content = util.get_entry(title)
+    formDict = {
+        'title': title,
+        'content': content,
+    }
+    form = NewEntryForm(formDict)
+    return render(request, "encyclopedia/edit.html", {
+        'title': title,
+        'form': form
+    })
+

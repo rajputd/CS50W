@@ -5,5 +5,8 @@ Encyclopedia | {{ title }}
 {% endblock %}
 
 {% block body %}
+    <div class="float-right">
+        <a href="{% url 'edit' title %}" class="">edit</a>
+    </div>
     {{content |safe}}
 {% endblock %}
