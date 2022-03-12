@@ -3,7 +3,7 @@ from django.http import HttpResponseNotFound
 import markdown2
 
 from . import util
-from .forms import NewEntryForm
+from .forms import EditEntryForm, NewEntryForm
 
 
 def index(request):
@@ -47,7 +47,7 @@ def entry(request, title):
 
 def create(request):
     if request.method == 'POST':
-        print("form submitted")
+        print("create entry form submitted")
         form = NewEntryForm(request.POST)
 
         if form.is_valid():
@@ -72,12 +72,21 @@ def create(request):
     return render(request, "encyclopedia/create.html", {'form': form})
 
 def edit(request, title):
+    if request.method == 'POST':
+        print("edit entry form submitted")
+        form = EditEntryForm(request.POST)
+
+        if form.is_valid():
+            print("saving entry edits...")
+            util.save_entry(title, form.cleaned_data['content'])
+            return redirect('entry', title=title)
+        else:
+            print("Rejected entry edit submission for some generic reason")
+            return render(request, "encyclopedia/edit.html", {'form': form})
+
+    #render prefilled form
     content = util.get_entry(title)
-    formDict = {
-        'title': title,
-        'content': content,
-    }
-    form = NewEntryForm(formDict)
+    form = EditEntryForm({ 'content': content })
     return render(request, "encyclopedia/edit.html", {
         'title': title,
         'form': form
