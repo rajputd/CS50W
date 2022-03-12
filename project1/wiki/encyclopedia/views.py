@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponseNotFound
 import markdown2
+import random
 
 from . import util
 from .forms import EditEntryForm, NewEntryForm
@@ -91,4 +92,10 @@ def edit(request, title):
         'title': title,
         'form': form
     })
+
+def random_page(request):
+    entries = util.list_entries()
+    random_num = random.randint(0, len(entries) - 1)
+    random_title = entries[random_num]
+    return redirect('entry', title=random_title)
 
