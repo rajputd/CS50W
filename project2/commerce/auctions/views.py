@@ -4,11 +4,32 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from .models import User
+from .models import User, AuctionListing
+from .forms import NewAuctionListingForm
 
 
 def index(request):
     return render(request, "auctions/index.html")
+
+def create_listing(request):
+    if request.method == "POST":
+        submitted_form = NewAuctionListingForm(request.POST)
+
+        if submitted_form.is_valid():
+            print("saving new AuctionListing...")
+            data = submitted_form.cleaned_data
+            data['creator'] = request.user
+            print(request.user)
+            print(data)
+            listing = AuctionListing.objects.create(**data)
+            listing.save()
+            # TODO return redirect('entry', title=title)
+        else:
+            print("Rejected new Auction Listing submission for some generic reason")
+            return render(request, "auctions/create_listing.html", {'form': submitted_form})
+
+    form = NewAuctionListingForm()
+    return render(request, "auctions/create_listing.html", { 'form': form })
 
 
 def login_view(request):
