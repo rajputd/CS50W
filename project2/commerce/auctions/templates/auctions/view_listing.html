@@ -9,7 +9,14 @@
 
         <h2>Price: ${{ listing.starting_bid }}</h2>
 
-        <p>TODO Submit bid forum</p>
+        {% load crispy_forms_tags %}  
+        <form method="POST" action="{% url 'create_bid' %}">
+            <div class="w-75">
+                {% csrf_token %}
+                {{ form | crispy }}
+            <input class="btn btn-primary" type="submit" value="Submit">
+            </div>
+        </form>
 
         <h2>Description</h2>
         <p>{{ listing.description }}</p>

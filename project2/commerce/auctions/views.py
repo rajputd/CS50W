@@ -6,8 +6,8 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from .models import User, AuctionListing, AuctionListingCategory
-from .forms import NewAuctionListingForm
+from .models import User, AuctionListing, AuctionListingCategory, AuctionBid
+from .forms import NewAuctionListingForm, NewBidForm
 
 
 def index(request):
@@ -26,7 +26,26 @@ def categories(request):
 
 def view_listing(request, id):
     listing = AuctionListing.objects.get(pk=id)
-    return render(request, "auctions/view_listing.html", { 'listing': listing })
+    form = NewBidForm({'listing': id, 'value': listing.starting_bid })
+    return render(request, "auctions/view_listing.html", { 'listing': listing, 'form': form })
+
+@login_required
+def create_bid(request):
+    print("in create_bid")
+    if request.method == "POST":
+        submitted_form = NewBidForm(request.POST)
+        if submitted_form.is_valid():
+            print("creating new bid...")
+            data = submitted_form.cleaned_data
+            data['creator'] = request.user
+            print(data)
+            bid = AuctionBid.objects.create(**data)
+            bid.save()
+            return HttpResponseRedirect(reverse("view_listing", args=[bid.listing.id]))
+        else:
+            print("Rejected new Auction Listing submission for some generic reason")
+            return HttpResponseRedirect(reverse("index"))
+
 
 @login_required
 def create_listing(request):
@@ -41,7 +60,7 @@ def create_listing(request):
             print(data)
             listing = AuctionListing.objects.create(**data)
             listing.save()
-            # TODO return redirect('entry', title=title)
+            return HttpResponseRedirect(reverse("view_listing", args=[listing.id]))
         else:
             print("Rejected new Auction Listing submission for some generic reason")
             return render(request, "auctions/create_listing.html", {'form': submitted_form})

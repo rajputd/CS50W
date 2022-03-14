@@ -15,7 +15,7 @@ class AuctionListingCategory(models.Model):
     title = models.CharField(max_length=100)
 
     def __str__(self):
-        return self.id.__str__() + '-' + self.title
+        return self.title
 
 class AuctionListing(models.Model):
     title = models.CharField(max_length=100)
@@ -29,6 +29,12 @@ class AuctionListing(models.Model):
     def __str__(self):
         return self.id.__str__() + '-' + self.creator.__str__() + '-' + self.title
 
+class AuctionBid(models.Model):
+    value = models.DecimalField(max_digits=10, decimal_places=2)
+    creator = models.ForeignKey(User, on_delete=models.CASCADE)
+    create_time = models.DateTimeField(auto_now_add=True)
+    listing = models.ForeignKey(AuctionListing, on_delete=models.CASCADE)
+
 # TODO auction listing
     # active
     # category
@@ -41,6 +47,3 @@ class AuctionListing(models.Model):
 # TODO comments
     # listing
     # comments
-
-# TODO categories
-    # title
