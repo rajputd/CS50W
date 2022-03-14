@@ -15,6 +15,9 @@ def index(request):
     print(listings)
     return render(request, "auctions/index.html", { 'listings': listings })
 
+def view_listing(request, id):
+    listing = AuctionListing.objects.get(pk=id)
+    return render(request, "auctions/view_listing.html", { 'listing': listing })
 
 @login_required
 def create_listing(request):

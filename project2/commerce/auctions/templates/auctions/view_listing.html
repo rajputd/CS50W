@@ -2,25 +2,39 @@
 
 {% block body %}
     <div class="container">
-        <h2>Active Listings</h2>
-
         <ul class="list-group">
-            {% for listing in listings %}
                 <li class="list-group-item">
                     <div class="row">
                         <div class="col-3 border">
                             <img src="{{ listing.image_url }}" class="img-fluid" alt="image for '{{ listing.title }}' auction listing">
                         </div>
                         <div class="col-9">
-                            <h3>{{ listing.title }}</h3>
+                            <h2>{{ listing.title }}</h2>
                             <p><strong>Price: $</strong>{{ listing.starting_bid }}</p>
                             <p>{{ listing.description }}</p>
                             <p>Created: {{ listing.create_time }}</p>
-                            <a href="{% url 'view_listing' listing.id %}">more details</a>
                         </div>
                     </div>
                 </li>
-            {% endfor %}
+            </ul>
+            
+            <h3>Comments</h3>
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <div class="row">
+                        <p>TODO</p>
+                    </div>
+                </li>
+                <li class="list-group-item">
+                    <div class="row">
+                        <p>TODO</p>
+                    </div>
+                </li>
+                <li class="list-group-item">
+                    <div class="row">
+                        <p>TODO</p>
+                    </div>
+                </li>
             </ul>
     </div>
     
