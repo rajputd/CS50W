@@ -2,7 +2,12 @@
 
 {% block body %}
     <div class="container">
-        <h2>Active Listings</h2>
+
+        {% if category %}
+            <h2>Active Listings for {{ category.title }}</h2>
+        {% else %}
+            <h2>Active Listings</h2>
+        {% endif %}
 
         <ul class="list-group">
             {% for listing in listings %}
@@ -21,7 +26,13 @@
                     </div>
                 </li>
             {% endfor %}
-            </ul>
+        </ul>
+
+        {% if listings|length == 0 %}
+            <p>there are no listings available</p>
+        {% endif %}
     </div>
+
+    
     
 {% endblock %}

@@ -6,14 +6,23 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from .models import User, AuctionListing
+from .models import User, AuctionListing, AuctionListingCategory
 from .forms import NewAuctionListingForm
 
 
 def index(request):
-    listings = AuctionListing.objects.all()
-    print(listings)
-    return render(request, "auctions/index.html", { 'listings': listings })
+    listings = None
+    category = None
+    if 'category' in request.GET:
+        category =  AuctionListingCategory.objects.get(pk = request.GET['category'])
+        listings = AuctionListing.objects.filter(category = category)
+    else:
+        listings = AuctionListing.objects.all()
+    return render(request, "auctions/index.html", { 'listings': listings, 'category': category })
+
+def categories(request):
+    categories = AuctionListingCategory.objects.all()
+    return render(request, "auctions/categories.html", { 'categories': categories })
 
 def view_listing(request, id):
     listing = AuctionListing.objects.get(pk=id)
