@@ -35,6 +35,7 @@ def create_bid(request):
     if request.method == "POST":
         submitted_form = NewBidForm(request.POST)
         if submitted_form.is_valid():
+            #TODO add logic to check that given bid is higher than other bids
             print("creating new bid...")
             data = submitted_form.cleaned_data
             data['creator'] = request.user
