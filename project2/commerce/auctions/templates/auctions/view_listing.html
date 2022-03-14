@@ -9,14 +9,20 @@
 
         <h2>Price: ${{ listing.starting_bid }}</h2>
 
-        {% load crispy_forms_tags %}  
-        <form method="POST" action="{% url 'create_bid' %}">
-            <div class="w-75">
-                {% csrf_token %}
-                {{ form | crispy }}
-            <input class="btn btn-primary" type="submit" value="Submit">
-            </div>
-        </form>
+        {% if user.is_authenticated %}
+            {% load crispy_forms_tags %}  
+            <form method="POST" action="{% url 'create_bid' %}">
+                <div class="w-75">
+                    {% csrf_token %}
+                    {{ form | crispy }}
+                <input class="btn btn-primary" type="submit" value="Submit">
+                </div>
+            </form>
+        {% else %}
+                <p><a href="{% url 'login' %}">Sign in</a> to submit a bid!</p>
+        {% endif %}
+
+        
 
         <h2>Description</h2>
         <p>{{ listing.description }}</p>
