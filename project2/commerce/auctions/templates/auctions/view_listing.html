@@ -2,40 +2,37 @@
 
 {% block body %}
     <div class="container">
-        <ul class="list-group">
-                <li class="list-group-item">
-                    <div class="row">
-                        <div class="col-3 border">
-                            <img src="{{ listing.image_url }}" class="img-fluid" alt="image for '{{ listing.title }}' auction listing">
-                        </div>
-                        <div class="col-9">
-                            <h2>{{ listing.title }}</h2>
-                            <p><strong>Price: $</strong>{{ listing.starting_bid }}</p>
-                            <p>{{ listing.description }}</p>
-                            <p>Created: {{ listing.create_time }}</p>
-                        </div>
-                    </div>
-                </li>
-            </ul>
+        <h2>Listing: {{ listing.title }}</h2>
+        <div class="w-75 border">
+            <img src="{{ listing.image_url }}" class="img-fluid" alt="image for '{{ listing.title }}' auction listing">
+        </div>
+
+        <h2>Price: ${{ listing.starting_bid }}</h2>
+
+        <p>TODO Submit bid forum</p>
+
+        <h2>Description</h2>
+        <p>{{ listing.description }}</p>
+
             
-            <h3>Comments</h3>
-            <ul class="list-group">
-                <li class="list-group-item">
-                    <div class="row">
-                        <p>TODO</p>
-                    </div>
-                </li>
-                <li class="list-group-item">
-                    <div class="row">
-                        <p>TODO</p>
-                    </div>
-                </li>
-                <li class="list-group-item">
-                    <div class="row">
-                        <p>TODO</p>
-                    </div>
-                </li>
-            </ul>
+        <h3>Comments</h3>
+        <ul class="list-group">
+            <li class="list-group-item">
+                <div class="row">
+                    <p>TODO</p>
+                </div>
+            </li>
+            <li class="list-group-item">
+                <div class="row">
+                    <p>TODO</p>
+                </div>
+            </li>
+            <li class="list-group-item">
+                <div class="row">
+                    <p>TODO</p>
+                </div>
+            </li>
+        </ul>
     </div>
     
 {% endblock %}
