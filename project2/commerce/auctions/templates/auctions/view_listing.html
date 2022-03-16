@@ -29,6 +29,19 @@
 
             
         <h3>Comments</h3>
+        {% if user.is_authenticated %}
+            {% load crispy_forms_tags %}  
+            <form method="POST">
+                <div class="w-75">
+                    {% csrf_token %}
+                    {{ form | crispy }}
+                <input class="btn btn-primary" type="submit" value="Submit">
+                </div>
+            </form>
+        {% else %}
+                <p><a href="{% url 'login' %}">Sign in</a> to submit a comment!</p>
+        {% endif %}
+
         <ul class="list-group">
             <li class="list-group-item">
                 <div class="row">

@@ -35,6 +35,12 @@ class AuctionBid(models.Model):
     create_time = models.DateTimeField(auto_now_add=True)
     listing = models.ForeignKey(AuctionListing, on_delete=models.CASCADE)
 
+class Comment(models.Model):
+    content = models.TextField()
+    creator = models.ForeignKey(User, on_delete=models.CASCADE)
+    create_time = models.DateTimeField(auto_now_add=True)
+    listing = models.ForeignKey(AuctionListing, on_delete=models.CASCADE)
+
 # TODO auction listing
     # active
     # category
