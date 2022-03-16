@@ -26,27 +26,25 @@ def categories(request):
 
 def view_listing(request, id):
     listing = AuctionListing.objects.get(pk=id)
-    form = NewBidForm({'listing': id, 'value': listing.starting_bid })
-    return render(request, "auctions/view_listing.html", { 'listing': listing, 'form': form })
-
-@login_required
-def create_bid(request):
-    print("in create_bid")
     if request.method == "POST":
         submitted_form = NewBidForm(request.POST)
         if submitted_form.is_valid():
-            #TODO add logic to check that given bid is higher than other bids
-            print("creating new bid...")
             data = submitted_form.cleaned_data
+            if data['value'] <= listing.starting_bid:
+                submitted_form.add_error("value", "Bid must be greator than current top bid of $" + listing.starting_bid.__str__())
+                return render(request, "auctions/view_listing.html", { 'listing': listing, 'form': submitted_form })
+            
             data['creator'] = request.user
-            print(data)
             bid = AuctionBid.objects.create(**data)
+            listing.starting_bid = bid.value
             bid.save()
-            return HttpResponseRedirect(reverse("view_listing", args=[bid.listing.id]))
+            listing.save()
         else:
-            print("Rejected new Auction Listing submission for some generic reason")
-            return HttpResponseRedirect(reverse("index"))
+            return render(request, "auctions/view_listing.html", { 'listing': listing, 'form': submitted_form})
 
+
+    form = NewBidForm({'listing': id, 'value': listing.starting_bid })
+    return render(request, "auctions/view_listing.html", { 'listing': listing, 'form': form })
 
 @login_required
 def create_listing(request):
